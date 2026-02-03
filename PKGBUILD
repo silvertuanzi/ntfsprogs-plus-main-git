@@ -23,7 +23,7 @@ makedepends=(
 )
 conflicts=('ntfsprogs' 'ntfs-3g' "$_pkgname")
 replaces=('ntfsprogs' 'ntfs-3g' "$_pkgname")
-provides=('ntfsprogs' "$_pkgname")
+provides=('ntfsprogs' 'ntfs-3g' "$_pkgname")
 
 source=("${_pkgname}::git+${url}.git")
 sha256sums=('SKIP')
