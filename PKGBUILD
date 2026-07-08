@@ -1,45 +1,43 @@
+#shellcheck shell=bash
 # AUR Maintainer: Shadichy <shadichy@blisslabs.org>
 
-_pkgname=ntfsprogs-plus
-pkgname=${_pkgname}-git
+_pkg=ntfsprogs-plus
+pkgbase=${_pkg}-git
+pkgname=$pkgbase
 
-_repo=ntfsprogs-plus/$_pkgname
+_repo=ntfsprogs-plus/$_pkg
 url="https://github.com/${_repo}"
 
-pkgver=0.9.15+2+g9cd9891
+pkgver=1.0.0+63+g69b4ca1
 pkgrel=1
 
 pkgdesc='NTFS filesystem driver and utilities'
 arch=('x86_64')
-license=('GPL-2.0-or-later')
-depends=('util-linux')
+license=('GPL-2.0-or-later' 'LGPL-2.0-or-later')
+depends=('util-linux-libs' 'hwinfo')
 makedepends=(
-  'git'
-  'autoconf'
-  'automake'
-  'libtool'
   'libgcrypt'
-  'pkgconf'
 )
-conflicts=('ntfsprogs' 'ntfs-3g' "$_pkgname")
-replaces=('ntfsprogs' 'ntfs-3g' "$_pkgname")
-provides=('ntfsprogs' 'ntfs-3g' "$_pkgname")
+conflicts=('ntfsprogs' 'ntfs-3g' "$_pkg")
+replaces=('ntfsprogs' 'ntfs-3g' "$_pkg")
+provides=('ntfsprogs' 'ntfs-3g' "$_pkg")
 
-source=("${_pkgname}::git+${url}.git")
+source=("${_pkg}::git+${url}.git#branch=ntfs-next")
 sha256sums=('SKIP')
 
 pkgver() {
-  cd "${srcdir}/${_pkgname}"
+  cd "${srcdir}/${_pkg}"
   git describe --long --tags | sed 's#v##;s#-RC#.rc#;s#-#+#g'
 }
 
 prepare() {
-  cd ${srcdir}/${_pkgname}
+  cd ${srcdir}/${_pkg}
   ./autogen.sh
 }
 
 build() {
-  cd ${srcdir}/${_pkgname}
+  cd ${srcdir}/${_pkg}
+
   ./configure \
     --prefix=/usr \
     --sbin=/usr/bin \
@@ -47,18 +45,30 @@ build() {
     --mandir=/usr/share/man \
     --disable-ldconfig \
     --enable-xattr-mappings \
-    --enable-posix-acls \
-    --enable-extras \
-    --enable-crypto
+    --enable-posix-acls
 
   make
 }
 
 package() {
-  cd ${srcdir}/${_pkgname}
-  make DESTDIR="${pkgdir}" rootbindir=/usr/bin rootsbindir=/usr/bin rootlibdir=/usr/lib install
+  cd ${srcdir}/${_pkg}
 
-  # License
-  install -dm644 "${pkgdir}/usr/share/licenses/${_pkgname}"
-  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${_pkgname}/LICENSE"
+  make \
+    DESTDIR="${pkgdir}" \
+    rootbindir=/usr/bin \
+    rootsbindir=/usr/bin \
+    rootlibdir=/usr/lib \
+    install
+
+  # ntfs-3g compat
+  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.ntfs"
+  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.ntfsplus"
+  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.ntfs-3g"
+  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.lowntfs-3g"
+  ln -s /usr/bin/fsck.ntfs "${pkgdir}/usr/bin/ntfsfix"
+
+  # Upstream License
+  install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
+  install -Dm644 COPYING "${pkgdir}/usr/share/licenses/${pkgname}/LICENSE"
 }
+

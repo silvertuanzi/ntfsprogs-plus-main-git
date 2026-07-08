@@ -1,18 +1,16 @@
 pkgbase = ntfsprogs-plus-git
 	pkgdesc = NTFS filesystem driver and utilities
-	pkgver = 0.9.15+2+g9cd9891
+	pkgver = 1.0.0+63+g69b4ca1
 	pkgrel = 1
 	url = https://github.com/ntfsprogs-plus/ntfsprogs-plus
 	arch = x86_64
 	license = GPL-2.0-or-later
-	makedepends = git
-	makedepends = autoconf
-	makedepends = automake
-	makedepends = libtool
+	license = LGPL-2.0-or-later
 	makedepends = libgcrypt
-	makedepends = pkgconf
-	depends = util-linux
+	depends = util-linux-libs
+	depends = hwinfo
 	provides = ntfsprogs
+	provides = ntfs-3g
 	provides = ntfsprogs-plus
 	conflicts = ntfsprogs
 	conflicts = ntfs-3g
@@ -20,7 +18,7 @@ pkgbase = ntfsprogs-plus-git
 	replaces = ntfsprogs
 	replaces = ntfs-3g
 	replaces = ntfsprogs-plus
-	source = ntfsprogs-plus::git+https://github.com/ntfsprogs-plus/ntfsprogs-plus.git
+	source = ntfsprogs-plus::git+https://github.com/ntfsprogs-plus/ntfsprogs-plus.git#branch=ntfs-next
 	sha256sums = SKIP
 
 pkgname = ntfsprogs-plus-git
