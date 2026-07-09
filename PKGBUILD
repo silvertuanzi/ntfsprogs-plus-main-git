@@ -22,7 +22,7 @@ conflicts=('ntfsprogs' 'ntfs-3g' "$_pkg")
 replaces=('ntfsprogs' 'ntfs-3g' "$_pkg")
 provides=('ntfsprogs' 'ntfs-3g' "$_pkg")
 
-source=("${_pkg}::git+${url}.git#branch=ntfs-next")
+source=("${_pkg}::git+${url}.git")
 sha256sums=('SKIP')
 
 pkgver() {
