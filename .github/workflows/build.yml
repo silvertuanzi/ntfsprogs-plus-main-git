@@ -16,7 +16,7 @@ jobs:
       - name: Build inside Arch docker
         run: |
           docker run --rm -v "$PWD:/src" archlinux/archlinux:base-devel bash -c "
-            pacman -Syu --noconfirm util-linux-libs hwinfo git libgcrypt &&
+            pacman -Syu --noconfirm util-linux-libs hwinfo git libgcrypt --needed &&
             cp /src/.github/makepkg.conf /etc/makepkg.conf.d/ &&
             useradd -m builder && chown -R builder:builder /src &&
             su - builder -c 'cd /src && makepkg -C'
