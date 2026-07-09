@@ -1,0 +1,40 @@
+name: Build Arch Package
+
+on:
+  workflow_dispatch:
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v7
+
+      - name: Build inside Arch docker
+        run: |
+          docker run --rm -v "$PWD:/src" archlinux/archlinux:base-devel bash -c "
+            pacman -Syu --noconfirm util-linux-libs hwinfo git libgcrypt &&
+            cp /src/.github/makepkg.conf /etc/makepkg.conf.d/ &&
+            useradd -m builder && chown -R builder:builder /src &&
+            su - builder -c 'cd /src && makepkg -C'
+          "
+
+      - name: Get package version
+        id: version
+        run: |
+          PKG=$(basename ./*.pkg.tar.zst)
+          VERSION=$(echo "$PKG" | sed 's/^ntfsprogs-plus-main-git-//; s/-[0-9]\+-[^-]*\.pkg\.tar\.zst$//')
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Upload .pkg to release
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ steps.version.outputs.version }}
+          name: ${{ steps.version.outputs.version }}
+          files: ./*.pkg.tar.zst
+          overwrite_files: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
