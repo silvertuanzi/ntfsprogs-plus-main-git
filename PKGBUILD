@@ -1,8 +1,9 @@
 #shellcheck shell=bash
+# Maintainer: Silvertuanzi <126318157+silvertuanzi@users.noreply.github.com>
 # AUR Maintainer: Shadichy <shadichy@blisslabs.org>
 
 _pkg=ntfsprogs-plus
-pkgbase=${_pkg}-git
+pkgbase=${_pkg}-main-git
 pkgname=$pkgbase
 
 _repo=ntfsprogs-plus/$_pkg
@@ -16,7 +17,7 @@ arch=('x86_64')
 license=('GPL-2.0-or-later' 'LGPL-2.0-or-later')
 depends=('util-linux-libs' 'hwinfo')
 makedepends=(
-  'libgcrypt'
+  'libgcrypt' 'git'
 )
 conflicts=('ntfsprogs' 'ntfs-3g' "$_pkg")
 replaces=('ntfsprogs' 'ntfs-3g' "$_pkg")
