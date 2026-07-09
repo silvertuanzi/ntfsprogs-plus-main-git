@@ -7,3 +7,15 @@ pkg/
 
 # Ignore build artifacts
 *.pkg.tar*
+*.tar
+*.tar.*
+*.jar
+*.exe
+*.msi
+*.deb
+*.zip
+*.tgz
+*.log
+*.log.*
+*.sig
+
