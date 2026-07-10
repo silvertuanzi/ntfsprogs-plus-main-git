@@ -23,8 +23,8 @@ conflicts=('ntfsprogs' 'ntfs-3g' "$_pkg")
 replaces=('ntfsprogs' 'ntfs-3g' "$_pkg")
 provides=('ntfsprogs' 'ntfs-3g' "$_pkg")
 
-source=("${_pkg}::git+${url}.git")
-sha256sums=('SKIP')
+source=("${_pkg}::git+${url}.git" "mount.ntfs-3g-compat")
+sha256sums=('SKIP' 'SKIP')
 
 pkgver() {
   cd "${srcdir}/${_pkg}"
@@ -62,11 +62,9 @@ package() {
     install
 
   # ntfs-3g compat
-  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.ntfs"
-  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.ntfsplus"
-  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.ntfs-3g"
-  ln -s /usr/bin/mount "${pkgdir}/usr/bin/mount.lowntfs-3g"
   ln -s /usr/bin/fsck.ntfs "${pkgdir}/usr/bin/ntfsfix"
+  install -Dm755 "${srcdir}/mount.ntfs-3g-compat" "${pkgdir}/usr/bin/mount.ntfs-3g"
+  ln -s "/usr/bin/mount.ntfs-3g" "${pkgdir}/usr/bin/mount.lowntfs-3g"
 
   # Upstream License
   install -dm755 "${pkgdir}/usr/share/licenses/${pkgname}"
